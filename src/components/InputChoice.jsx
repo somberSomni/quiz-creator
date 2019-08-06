@@ -6,9 +6,8 @@ const InputContainer = styled.input`
     max-width: 80vw;
     padding: 5px;
     border-radius: 5px;
-    
-
 `;
+
 export default function InputChoice({setInputAnswer}) {
     return (
         <React.Fragment>

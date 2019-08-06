@@ -34,31 +34,41 @@ const ChoiceContainer = styled.div`
 const ChoiceText = styled.p`
     margin-left: 10px;
 `;
-export default function Choice({ choice, handleSelected, index, selected, disable, correct}) {
-    const [ onChoice, setOnChoice ] = useState(false);
-    console.log(correct, index);
+export default function Choice({ choice, handleSelected, index, selected, disable, correct }) {
+    const [onChoice, setOnChoice] = useState(false);
     return (
         <ChoiceContainer
-                disable={disable}
-                correct={correct}
-                onMouseEnter={() => { if(!disable) setOnChoice(true) }}
-                onMouseLeave={() => { if(!disable) setOnChoice(false) }}
-                onClick={() => {
-                    if(selected) {
-                        handleSelected(index, choice, true);
-                    } else {
-                        handleSelected(index, choice)
-                    }
-                }}
-                enable={onChoice}>
+            disable={disable}
+            correct={correct}
+            onMouseEnter={() => { if (!disable) setOnChoice(true) }}
+            onMouseLeave={() => { if (!disable) setOnChoice(false) }}
+            onClick={() => {
+                if (selected) {
+                    handleSelected(index, choice, true);
+                } else {
+                    handleSelected(index, choice)
+                }
+            }}
+            enable={onChoice}>
             <SelectIcon >
-                <FontAwesomeIcon 
-                    icon={['fas', 'circle']} 
-                    style={{ color: onChoice ? 
-                        (selected ? 'black' : '#999999') : 
-                        (selected ? 'black' : 'rgba(0,0,0,0)')}} />
+                <FontAwesomeIcon
+                    icon={['fas', 'circle']}
+                    style={{
+                        color: onChoice ?
+                            (selected ? 'black' : '#999999') :
+                            (selected ? 'black' : 'rgba(0,0,0,0)')
+                    }} />
             </SelectIcon>
             <ChoiceText>{choice}</ChoiceText>
         </ChoiceContainer>
     )
+}
+
+Choice.propTypes = {
+    choice: PropTypes.string, 
+    handleSelected: PropTypes.func, 
+    index: PropTypes.number, 
+    selected: PropTypes.bool, 
+    disable: PropTypes.bool, 
+    correct: PropTypes.bool
 }

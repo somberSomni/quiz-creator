@@ -32,7 +32,7 @@ export default function Problem({ question, choices, answer, numOfTries, width }
             })
             setCorrectAnswer(mappedAnswers)
         } else {
-            if(choices && choices.length > 1) {
+            if (choices && choices.length > 1) {
                 setCorrectAnswer(choices.findIndex(choice => choice == answer))
             }
         }
@@ -44,14 +44,12 @@ export default function Problem({ question, choices, answer, numOfTries, width }
                 newSelected[i] = choice;
             } else {
                 if (remove) {
-                    console.log('removing element')
                     newSelected[i] = null;
                 }
             }
             setSelected(newSelected);
         } else {
             if (remove) {
-                console.log('removing element')
                 setSelected(-1)
             } else {
                 setSelected(i)
@@ -66,7 +64,6 @@ export default function Problem({ question, choices, answer, numOfTries, width }
                 if (isCorrect) {
                     setLabel('Correct');
                 } else {
-                    console.log('wrong');
                     if (tries > 1) {
                         setLabel('Try Again')
                     } else {
@@ -74,11 +71,10 @@ export default function Problem({ question, choices, answer, numOfTries, width }
                     }
                 }
             } else {
-                if(choiceCondition) {
+                if (choiceCondition) {
                     if (choices[selected] == answer) {
                         setLabel('Correct');
                     } else {
-                        console.log('wrong');
                         if (tries > 1) {
                             setLabel('Try Again');
                         } else {
@@ -86,10 +82,9 @@ export default function Problem({ question, choices, answer, numOfTries, width }
                         }
                     }
                 } else {
-                    if(answer == inputAnswer) {    
+                    if (answer == inputAnswer) {
                         setLabel('Correct');
                     } else {
-                        console.log('wrong');
                         if (tries > 1) {
                             setLabel('Try Again');
                         } else {
@@ -114,9 +109,9 @@ export default function Problem({ question, choices, answer, numOfTries, width }
                     correct={answerCondition ? (correctAnswer[i] && tries <= 0 ? true : false) : (correctAnswer === i && tries <= 0)}
                     handleSelected={handleSelected}
                     index={i} />) :
-                <InputChoice setInputAnswer={setInputAnswer}/>}
-            {choiceCondition ? null : <AnswerMessage show={tries <= 0} correct={answer == inputAnswer} answer={answer}/>}
-            <SubmitButton disable={tries <= 0} turnOff={answerCondition ? (selected.filter(each => each).length === 0) : (choiceCondition ? selected === -1: inputAnswer.length === 0)} checkAnswer={checkAnswer} />
+                <InputChoice setInputAnswer={setInputAnswer} />}
+            {choiceCondition ? null : <AnswerMessage show={tries <= 0} correct={answer == inputAnswer} answer={answer} />}
+            <SubmitButton disable={tries <= 0} turnOff={answerCondition ? (selected.filter(each => each).length === 0) : (choiceCondition ? selected === -1 : inputAnswer.length === 0)} checkAnswer={checkAnswer} />
         </ProblemContainer>
     )
 }

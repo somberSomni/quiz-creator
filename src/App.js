@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import questions from './data/index.js';
-import { debounce } from 'lodash';
 //components
 import Quiz from './components/Quiz.jsx';
+import StartMenu from './components/StartMenu.jsx';
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faChevronDown, faCircle } from '@fortawesome/free-solid-svg-icons'
 // import { faBracketsCurly, faPencilAlt, faEnvelope, faHomeAlt, faLaptopCode, faTimes, faServer, faDatabase, faPlus, faBrain, faChartPie } from '@fortawesome/pro-regular-svg-icons'
@@ -15,10 +15,10 @@ library.add(
   faCircle);
 
 export default function App() {
-
+  const [start, setStart] = useState(false);
   return (
     <div className='App'>
-      <Quiz quiz={questions} />
+      {start ? <Quiz quiz={questions} /> : <StartMenu setStart={setStart} />}
     </div>
   );
 }
