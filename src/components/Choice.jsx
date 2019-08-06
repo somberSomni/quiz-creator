@@ -5,10 +5,10 @@ import PropTypes from 'prop-types';
 
 const SelectIcon = styled.div`
     border-radius: 50%;
-    padding: 1px;
     border: 4px solid black;
-    width: 18x;
-    height: 18px;
+    height: 19px;
+    width: 18px;
+    padding: 0px 1px;
 `;
 
 const ChoiceContainer = styled.div`
@@ -17,6 +17,8 @@ const ChoiceContainer = styled.div`
     flex-direction: row;
     align-items: center;
     min-width: 200px;
+    max-width: 75vw;
+    width: 100%;
     height: 25px;
     background: rgba(0,0,0,0);
     box-shadow: ${props => props.correct ? '1px 1px 4px 2px rgba(0,0,0,0.2)' : 'none'};
@@ -54,7 +56,7 @@ export default function Choice({ choice, handleSelected, index, selected, disabl
                     icon={['fas', 'circle']} 
                     style={{ color: onChoice ? 
                         (selected ? 'black' : '#999999') : 
-                        (selected ? 'black' : 'rgba(0,0,0,0)') }} />
+                        (selected ? 'black' : 'rgba(0,0,0,0)')}} />
             </SelectIcon>
             <ChoiceText>{choice}</ChoiceText>
         </ChoiceContainer>

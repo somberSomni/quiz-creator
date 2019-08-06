@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Choice from './Choice.jsx';
 import SubmitButton from './SubmitButton.jsx';
 import InputChoice from './InputChoice.jsx';
+import AnswerMessage from './AnswerMessage.jsx';
 import PropTypes from 'prop-types';
 
 const ProblemContainer = styled.div`
@@ -10,17 +11,20 @@ const ProblemContainer = styled.div`
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    width: ${props => props.width || '600px'};
 `;
-export default function Problem({ question, choices, answer, numOfTries}) {
+export default function Problem({ question, choices, answer, numOfTries, width }) {
     const answerCondition = answer instanceof Array && answer.length > 1 && choices && choices instanceof Array;
-    const [selected, setSelected] = useState(answerCondition? [] : -1);
-    const [ correctAnswer, setCorrectAnswer ] = useState(answerCondition? [] : -1);
+    const choiceCondition = choices && choices instanceof Array && choices.length > 1;
+    const [selected, setSelected] = useState(answerCondition ? [] : -1);
+    const [correctAnswer, setCorrectAnswer] = useState(answerCondition ? [] : -1);
     const [tries, setTries] = useState(numOfTries || 1);
+    const [inputAnswer, setInputAnswer] = useState('');
     useEffect(() => {
-        if(answerCondition) {
+        if (answerCondition) {
             const mappedAnswers = choices.map(choice => {
                 const answerFound = answer.findIndex(a => a == choice) !== -1;
-                if(answerFound) {
+                if (answerFound) {
                     return choice;
                 } else {
                     return null;
@@ -28,23 +32,25 @@ export default function Problem({ question, choices, answer, numOfTries}) {
             })
             setCorrectAnswer(mappedAnswers)
         } else {
-            setCorrectAnswer(choices.findIndex(choice => choice == answer))
+            if(choices && choices.length > 1) {
+                setCorrectAnswer(choices.findIndex(choice => choice == answer))
+            }
         }
     }, []);
     function handleSelected(i, choice, remove = false) {
-        if(answerCondition) {
+        if (answerCondition) {
             let newSelected = selected.slice();
-            if(!newSelected[i]) {
+            if (!newSelected[i]) {
                 newSelected[i] = choice;
             } else {
-                if(remove) {
+                if (remove) {
                     console.log('removing element')
                     newSelected[i] = null;
                 }
             }
             setSelected(newSelected);
         } else {
-            if(remove) {
+            if (remove) {
                 console.log('removing element')
                 setSelected(-1)
             } else {
@@ -54,30 +60,41 @@ export default function Problem({ question, choices, answer, numOfTries}) {
     }
     function checkAnswer(setLabel) {
         //continues to check answers based on number of tries allowed
-        console.log(tries);
-        if(tries > 0) {
-            if(answerCondition) {
+        if (tries > 0) {
+            if (answerCondition) {
                 const isCorrect = correctAnswer.every((a, i) => a == selected[i])
-                if(isCorrect) {
+                if (isCorrect) {
                     setLabel('Correct');
                 } else {
                     console.log('wrong');
-                    if(tries > 1) {
+                    if (tries > 1) {
                         setLabel('Try Again')
                     } else {
                         setLabel('Wrong');
                     }
                 }
             } else {
-                if(choices[selected] == answer) {
-                    console.log('correct');
-                    setLabel('Correct');
-                } else {
-                    console.log('wrong');
-                    if(tries > 1) {
-                        setLabel('Try Again');
+                if(choiceCondition) {
+                    if (choices[selected] == answer) {
+                        setLabel('Correct');
                     } else {
-                        setLabel('Wrong');
+                        console.log('wrong');
+                        if (tries > 1) {
+                            setLabel('Try Again');
+                        } else {
+                            setLabel('Wrong');
+                        }
+                    }
+                } else {
+                    if(answer == inputAnswer) {    
+                        setLabel('Correct');
+                    } else {
+                        console.log('wrong');
+                        if (tries > 1) {
+                            setLabel('Try Again');
+                        } else {
+                            setLabel('Wrong');
+                        }
                     }
                 }
             }
@@ -85,20 +102,21 @@ export default function Problem({ question, choices, answer, numOfTries}) {
         }
     }
     return (
-        <ProblemContainer>
+        <ProblemContainer width={width}>
             <p>{question}</p>
-            { answerCondition ? <h5 style={{ marginTop: -5}}>Select One or More</h5> : null }
-            {choices && choices.length > 0 ?
+            {answerCondition ? <h5 style={{ marginTop: -5 }}>Select One or More</h5> : null}
+            {choiceCondition ?
                 choices.map((choice, i) => <Choice
                     key={i.toString()}
                     selected={answerCondition ? (selected[i] === choice) : selected === i}
                     choice={choice}
                     disable={tries <= 0}
-                    correct={answerCondition ? (correctAnswer[i] && tries <= 0 ? true: false) : (correctAnswer === i && tries <= 0)}
+                    correct={answerCondition ? (correctAnswer[i] && tries <= 0 ? true : false) : (correctAnswer === i && tries <= 0)}
                     handleSelected={handleSelected}
                     index={i} />) :
-                <InputAnswer />}
-            <SubmitButton disable={tries <= 0} turnOff={answerCondition ? (selected.filter(each => each).length === 0) : (selected === -1)} checkAnswer={checkAnswer} />
+                <InputChoice setInputAnswer={setInputAnswer}/>}
+            {choiceCondition ? null : <AnswerMessage show={tries <= 0} correct={answer == inputAnswer} answer={answer}/>}
+            <SubmitButton disable={tries <= 0} turnOff={answerCondition ? (selected.filter(each => each).length === 0) : (choiceCondition ? selected === -1: inputAnswer.length === 0)} checkAnswer={checkAnswer} />
         </ProblemContainer>
     )
 }
@@ -109,5 +127,7 @@ Problem.propTypes = {
     answer: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
-        PropTypes.array])
+        PropTypes.array]),
+    numOfTries: PropTypes.number,
+    width: PropTypes.number
 }

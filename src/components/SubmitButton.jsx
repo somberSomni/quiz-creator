@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const Button = styled.button`
     font-size: 1em;
     min-width: 200px;
     padding: 10px;
-    margin-top: 5px;
+    margin-top: 10px;
     border: none;
     background-color: ${props => props.color}
     border-radius: 5px;
@@ -50,4 +51,10 @@ export default function SubmitButton({ label, checkAnswer, disable, turnOff, bgc
             {buttonLabel} {emoji}
         </Button>
     )
+}
+
+SubmitButton.propTypes = {
+    label: PropTypes.string, 
+    checkAnswer: PropTypes.func, 
+    disable, turnOff, bgcolor
 }
