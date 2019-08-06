@@ -1,2 +1,2 @@
 # quiz-creator
-Create a quiz using vanilla js or react
+Create a quiz using react
